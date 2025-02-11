@@ -15,7 +15,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 }) => {
 	return (
 		<div className="flex flex-row items-center">
-			{/* Mobile (!lg) */}
+			{/* Mobile */}
 			<div
 				className="
 					lg:hidden
@@ -34,7 +34,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 				<Icon size={28} color="white" />
 			</div>
 
-			{/* Large screens (lg) */}
+			{/* Desktop */}
 			<div
 				className="
 					hidden
