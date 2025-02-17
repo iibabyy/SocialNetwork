@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
+import { signIn } from 'next-auth/react';
 
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import Input from "../Input";
 import Modal from "../Modal";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const RegisterModal = () => {
 	const loginModal = useLoginModal();
@@ -11,8 +14,8 @@ const RegisterModal = () => {
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
+	const [name, setName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 		
 	const onToggle = useCallback(async () => {
@@ -28,16 +31,29 @@ const RegisterModal = () => {
 		try {
 			setIsLoading(true);
 
-			// TODO: ADD REGISTER AND LOGIN
+			await axios.post('/api/register', {
+				email,
+				username,
+				password,
+				name,
+			});
+
+			toast.success('Account created');
+
+			signIn('credentials', {
+				email,
+				password,
+			});
 
 			registerModal.onClose();
 		} catch (error) {
 			console.log(error)
+			toast.error("Something went wrong")
 		} finally {
 			setIsLoading(false);
 		}
 
-	}, [loginModal])
+	}, [loginModal, email, password, username])
 
 	const bodyContent = (
 		<div className="flex flex-col gap-4">
@@ -48,7 +64,7 @@ const RegisterModal = () => {
 				disabled={isLoading}
 			/>
 			<Input
-				placeholder="Name"
+				placeholder="name"
 				onChange={(e) => setName(e.target.value)}
 				value={name}
 				disabled={isLoading}
@@ -64,7 +80,8 @@ const RegisterModal = () => {
 				onChange={(e) => setPassword(e.target.value)}
 				value={password}
 				disabled={isLoading}
-			/>
+				type="password"
+				/>
 		</div>
 	);
 
@@ -89,7 +106,7 @@ const RegisterModal = () => {
 			isOpen={registerModal.isOpen}
 			title="Create an account"
 			actionLabel="Register"
-			onClose={loginModal.onClose}
+			onClose={registerModal.onClose}
 			onSubmit={onSubmit}
 			body={bodyContent}
 			footer={footerContent}
