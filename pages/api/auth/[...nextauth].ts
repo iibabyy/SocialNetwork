@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
 import prisma from '@/libs/prismadb';
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
 	adapter: PrismaAdapter(prisma),
 	providers: [
 		CredentialsProvider({
@@ -15,6 +15,7 @@ export default NextAuth({
 				password: { label: 'pasword', type: 'password' },
 			},
 			async authorize(credentials) {
+				console.log("------[ AUTHORIZING ]------")
 				if (!credentials?.email || !credentials?.password) {
 					throw new Error('Invalid credentials')
 				}
@@ -38,16 +39,17 @@ export default NextAuth({
 					throw new Error('Invalid credentials')
 				}
 
+				console.log("------[ AUTHORIZED ]------")
 				return user;
 			}
 		}),
 	],
 	debug: process.env.NODE_ENV === 'development',
-	session: {
-		strategy: 'jwt'
-	},
+	session: { strategy: 'jwt' },
 	jwt: {
 		secret: process.env.NEXTAUTH_JWT_SECRET,
 	},
 	secret: process.env.NEXTAUTH_SECRET
-})
+}
+
+export default NextAuth(authOptions)

@@ -1,19 +1,20 @@
 import { useCallback } from "react";
 import { AiOutlineClose } from 'react-icons/ai';
 import Button from "./Button";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 
 interface ModalProps {
 	isOpen?: boolean;
 	disabled?: boolean;
 	onClose: () => void;
-	onSubmit: () => void;
+	onSubmit: SubmitHandler<any>;
 	title?: string;
 	body?: React.ReactElement;
 	footer?: React.ReactElement;
 	actionLabel: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const Modal = ({
 	isOpen,
 	disabled,
 	onClose,
@@ -22,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({
 	body,
 	footer,
 	actionLabel,
-}) => {
+}: ModalProps) => {
 	const handleClose = useCallback(() => {
 		if (disabled) {
 			return ;
@@ -31,12 +32,12 @@ const Modal: React.FC<ModalProps> = ({
 		onClose();
 	}, [disabled, onClose]);
 
-	const handleSubmit = useCallback(() => {
+	const handleSubmit = useCallback((data: any) => {
 		if (disabled) {
 			return ;
 		}
 
-		onSubmit();
+		onSubmit(data);
 	}, [disabled, onSubmit]);
 
 	if (!isOpen) {
