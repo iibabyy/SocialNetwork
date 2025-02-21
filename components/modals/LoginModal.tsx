@@ -1,11 +1,14 @@
-import useLoginModal from "@/hooks/useLoginModal";
-import { useCallback, useState } from "react";
-import Input from "../Input";
-import Modal from "../Modal";
-import { register } from "module";
-import useRegisterModal from "@/hooks/useRegisterModal";
+import { useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import useLoginModal from "@/hooks/useLoginModal";
+import useRegisterModal from "@/hooks/useRegisterModal";
+import { loginSchema } from '@/schemas/auth'
+
+import Input, { InputError } from "../Input";
+import Modal from "../Modal";
 
 type LoginFields = {
 	email: string,
@@ -16,29 +19,48 @@ const LoginModal = () => {
 	const loginModal = useLoginModal();
 	const registerModal = useRegisterModal();
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
-
-	const { register, handleSubmit } = useForm<LoginFields>();
+	const {
+		register,
+		handleSubmit,
+		setError,
+		formState: { errors, isSubmitting }
+	} = useForm<LoginFields>({
+		resolver: zodResolver(loginSchema)
+	});
 
 	const onToggle = useCallback(async () => {
-		if (isLoading) {
+		if (isSubmitting) {
 			return ;
 		}
 
 		loginModal.onClose();
 		registerModal.onOpen();
-	}, [isLoading, registerModal, loginModal])
+	}, [isSubmitting, registerModal, loginModal])
 
 	// const onSubmit: SubmitHandler<LoginFields> = useCallback(async (data) => {
 	// 	console.log(data)
 
 	// }, [loginModal, email, password])
-	
-	const onSubmit: SubmitHandler<LoginFields> = (data) => {
-		console.log("DATA: ", data)
-	};
+
+	const onSubmit: SubmitHandler<LoginFields> = useCallback(async ({
+		email,
+		password,
+	}) => {
+		try {
+			await signIn('credentials', {
+				email,
+				password
+			})
+
+			loginModal.onClose();
+		} catch (error) {
+			console.log(error)
+			setError("root", {
+				message: "Invalid credentials",
+			})
+		}
+
+	}, [loginModal]);
 
 	const bodyContent = (
 		<div className="flex flex-col gap-4">
@@ -46,19 +68,17 @@ const LoginModal = () => {
 				{...register("email")}
 				placeholder="Email"
 				type="text"
-				// onChange={(e) => setEmail(e.target.value)}
-				// value={email}
-				disabled={isLoading}
+				error={errors.email?.message}
+				disabled={isSubmitting}
 			/>
-			<p></p>
 			<Input
 				{...register("password")}
+				error={errors.password?.message}
 				placeholder="Password"
-				// onChange={(e) => setPassword(e.target.value)}
-				// value={password}
 				type="password"
-				disabled={isLoading}
+				disabled={isSubmitting}
 			/>
+			<InputError error={errors.root?.message} />
 		</div>
 	);
 
@@ -79,7 +99,7 @@ const LoginModal = () => {
 
 	return (
 		<Modal
-			disabled={isLoading}
+			disabled={isSubmitting}
 			isOpen={loginModal.isOpen}
 			title="Login"
 			actionLabel="Sign in"

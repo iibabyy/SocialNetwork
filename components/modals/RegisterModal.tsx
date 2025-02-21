@@ -3,39 +3,63 @@ import { signIn } from 'next-auth/react';
 
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
-import Input from "../Input";
+import Input, { InputError } from "../Input";
 import Modal from "../Modal";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "@/schemas/auth";
+import { z } from "zod";
+
+type RegisterFields = {
+	email: string,
+	username: string,
+	name: string,
+	password: string,
+	confirmPassword: string,
+};
 
 const RegisterModal = () => {
+	// Modals hooks
 	const loginModal = useLoginModal();
 	const registerModal = useRegisterModal();
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [username, setUsername] = useState("");
-	const [name, setName] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
-		
+	// Form hook (react-hook-form)
+	const {
+		register,
+		handleSubmit,
+		setError,
+		formState: { errors, isSubmitting }
+	} = useForm<RegisterFields>({
+		resolver: zodResolver(registerSchema)
+	})
+
+	// toggle (switch to login)
 	const onToggle = useCallback(async () => {
-		if (isLoading) {
+		if (isSubmitting) {
 			return ;
 		}
 
 		registerModal.onClose();
 		loginModal.onOpen();
-	}, [isLoading, registerModal, loginModal])
+	}, [isSubmitting, registerModal, loginModal])
 
-	const onSubmit = useCallback(async () => {
+	// Submit
+	const onSubmit: SubmitHandler<RegisterFields> = useCallback(async (data) => {
 		try {
-			setIsLoading(true);
-
+			const email = data.email;	
+			const username = data.username;	
+			const name = data.name;	
+			const password = data.password;	
+			const confirmPassword = data.confirmPassword;	
+ 
 			await axios.post('/api/register', {
 				email,
 				username,
-				password,
 				name,
+				password,
+				confirmPassword,
 			});
 
 			toast.success('Account created');
@@ -47,41 +71,58 @@ const RegisterModal = () => {
 
 			registerModal.onClose();
 		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				const data = error.response?.data;
+
+				if (data.message) {
+					console.log(data.message);
+					toast.error(data.message);
+				} else {
+					console.log("error: ", error.response);
+					toast.error("Something went wrong")
+				}
+			}
 			console.log(error)
 			toast.error("Something went wrong")
-		} finally {
-			setIsLoading(false);
 		}
 
-	}, [loginModal, email, password, username])
+	}, [loginModal, registerModal])
 
 	const bodyContent = (
 		<div className="flex flex-col gap-4">
 			<Input
+				{...register("email")}
 				placeholder="Email"
-				onChange={(e) => setEmail(e.target.value)}
-				value={email}
-				disabled={isLoading}
+				disabled={isSubmitting}
+				error={errors.email?.message}
 			/>
 			<Input
+				{...register("name")}
 				placeholder="name"
-				onChange={(e) => setName(e.target.value)}
-				value={name}
-				disabled={isLoading}
+				disabled={isSubmitting}
+				error={errors.name?.message}
 			/>
 			<Input
+				{...register("username")}
 				placeholder="Username"
-				onChange={(e) => setUsername(e.target.value)}
-				value={username}
-				disabled={isLoading}
+				disabled={isSubmitting}
+				error={errors.username?.message}
 			/>
 			<Input
+				{...register("password")}
 				placeholder="Password"
-				onChange={(e) => setPassword(e.target.value)}
-				value={password}
-				disabled={isLoading}
+				disabled={isSubmitting}
 				type="password"
-				/>
+				error={errors.password?.message}
+			/>
+			<Input
+				{...register("confirmPassword")}
+				placeholder="Confirm Password"
+				disabled={isSubmitting}
+				type="password"
+				error={errors.confirmPassword?.message}
+			/>
+			<InputError error={errors.root?.message} />
 		</div>
 	);
 
@@ -102,12 +143,12 @@ const RegisterModal = () => {
 
 	return (
 		<Modal
-			disabled={isLoading}
+			disabled={isSubmitting}
 			isOpen={registerModal.isOpen}
 			title="Create an account"
 			actionLabel="Register"
 			onClose={registerModal.onClose}
-			onSubmit={onSubmit}
+			onSubmit={handleSubmit(onSubmit)}
 			body={bodyContent}
 			footer={footerContent}
 		/>

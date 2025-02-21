@@ -1,20 +1,40 @@
+import React from "react";
+
 interface InputProps {
 	placeholder?: string;
 	value?: string;
 	type?: string;
 	disabled?: boolean;
+	error?: string;
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-const Input:React.FC<InputProps> = ({
+interface InputErrorProps {
+	error: string | undefined;
+}
+
+export const InputError: React.FC<InputErrorProps> = ({error}) => {
+	return (
+		<div>
+			{error && (
+				<p className="mt-2 text-sm text-red-500">
+				{error}
+				</p>
+			)}
+		</div>
+	);
+}
+
+const Input: React.FC<InputProps> = ({
 	placeholder,
 	value,
 	type,
 	disabled,
 	onChange,
+	error,
 	...rest
 }) => {
-	return (
+	return (<>
 		<input
 			{...rest}
 			disabled={disabled}
@@ -39,7 +59,8 @@ const Input:React.FC<InputProps> = ({
 				disabled:cursor-not-allowed
 			"
 		/>
-	);
+		<InputError error={error} />
+	</>);
 }
  
 export default Input;
