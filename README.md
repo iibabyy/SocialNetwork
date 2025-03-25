@@ -1,40 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Social Network Application
+
+A modern social networking platform built with Next.js, React, and MongoDB.
+
+## Overview
+
+This application is a full-featured social network that allows users to connect, share content, and interact with each other. It provides a Twitter-like experience with a clean, responsive interface.
+
+## Features
+
+### User Management
+- **User Authentication**: Secure login and registration system
+- **Profile Customization**: Users can update their name, bio, profile image, and cover image
+- **Follow System**: Users can follow/unfollow each other to create a personalized network
+
+### Content Sharing
+- **Post Creation**: Users can create text posts with the "What's happening?" form
+- **Media Support**: Posts can include media content (images/videos)
+- **Post Feed**: View a chronological feed of posts from all users or filtered by username
+
+### Social Interactions
+- **Likes**: Users can like/unlike posts
+- **Reposts**: Users can repost content to their followers
+- **Comments**: Users can comment on posts to start conversations
+- **Notifications**: Real-time notification system for social interactions
+
+### UI Features
+- **Responsive Design**: Optimized for various screen sizes
+- **Dark Mode**: Modern dark-themed interface
+- **Intuitive Navigation**: Easy-to-use layout for seamless experience
+
+## Technical Stack
+
+- **Frontend**: React, Next.js
+- **Backend**: Next.js API routes
+- **Database**: MongoDB with Prisma ORM
+- **Authentication**: Custom authentication system
+- **Styling**: Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v14 or later)
+- MongoDB instance
+- npm or yarn
 
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/social-network.git
+cd social-network
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+Create a `.env` file in the root directory with the following variables:
+```
+DATABASE_URL="your_mongodb_connection_string"
+NEXTAUTH_SECRET="your_secret_key"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+4. Initialize Prisma:
+```bash
+npx prisma generate
+```
+
+5. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to start using the application.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- `/components`: React components
+- `/pages`: Next.js page components and API routes
+- `/prisma`: Database schema and configuration
+- `/libs`: Utility functions and services
+- `/public`: Static assets
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## API Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application provides several API endpoints:
 
-## Learn More
+- `POST /api/posts`: Create a new post
+- `GET /api/posts`: Retrieve posts (with optional username filter)
+- User authentication endpoints
+- Interaction endpoints (likes, comments, follows, etc.)
 
-To learn more about Next.js, take a look at the following resources:
+## Future Enhancements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- Direct messaging system
+- Advanced search functionality
+- Trending topics
+- Content discovery algorithm
+- Media upload optimization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+[MIT License](LICENSE)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Acknowledgements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- This project was bootstrapped with [create-next-app](https://nextjs.org/docs/pages/api-reference/create-next-app)
+- UI inspired by modern social media platforms
