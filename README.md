@@ -1,40 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Social Network Application
+
+A modern social networking platform built with Next.js, React, and MongoDB.
+
+## Overview
+
+This application is a full-featured social network that allows users to connect, share content, and interact with each other. It provides a Twitter-like experience with a clean, responsive interface.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v14 or later)
+- MongoDB instance
+- npm or yarn
 
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/iibabyy/SocialNetwork.git
+cd SocialNetwork
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env` file in the root directory with the following variables:
+```
+DATABASE_URL="your_mongodb_connection_string"
+NEXTAUTH_SECRET="your_secret_key"
+NEXTAUTH_JWT_SECRET="your_jwt_secret_key"
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+4. Initialize Prisma:
+```bash
+npx prisma generate
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+5. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to start using the application.
 
-## Learn More
+## Technical Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend**: React, Next.js
+- **Backend**: Next.js API routes
+- **Database**: MongoDB with Prisma ORM
+- **Authentication**: Custom authentication system
+- **Styling**: Tailwind CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/components`: React components
+- `/pages`: Next.js page components and API routes
+- `/prisma`: Database schema and configuration
+- `/libs`: Utility functions and services
+- `/public`: Static assets
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### User Management
+- **User Authentication**: Secure login and registration system
+- **Profile Customization**: Users can update their name, bio, profile image, and cover image
+- **Follow System**: Users can follow/unfollow each other to create a personalized network
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Content Sharing
+- **Post Creation**: Users can create text posts with the "What's happening?" form
+- **Media Support**: Posts can include media content (images/videos)
+- **Post Feed**: View a chronological feed of posts from all users or filtered by username
+
+### Social Interactions
+- **Likes**: Users can like/unlike posts
+- **Reposts**: Users can repost content to their followers
+- **Comments**: Users can comment on posts to start conversations
+- **Notifications**: Real-time notification system for social interactions
+
+### UI Features
+- **Responsive Design**: Optimized for various screen sizes
+- **Dark Mode**: Modern dark-themed interface
+- **Intuitive Navigation**: Easy-to-use layout for seamless experience
