@@ -27,11 +27,9 @@ npm install
 ```
 
 3. Set up environment variables:
-Create a `.env` file in the root directory with the following variables:
+Add your mongodb connection string to the `.env` file:
 ```
-DATABASE_URL="your_mongodb_connection_string"
-NEXTAUTH_SECRET="your_secret_key"
-NEXTAUTH_JWT_SECRET="your_jwt_secret_key"
+DATABASE_URL=your_mongodb_connection_string
 ```
 
 4. Initialize Prisma:
